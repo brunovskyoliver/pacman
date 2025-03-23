@@ -1,6 +1,7 @@
 import tkinter, random
 
 t = tkinter.Tk()
+# nepytajte sa preco -5, canvas je divny :D
 c = tkinter.Canvas(width=50 * 13 - 5, height=50 * 13 - 5, bg="white")
 c.pack()
 

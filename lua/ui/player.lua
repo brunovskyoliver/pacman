@@ -10,10 +10,11 @@ function Player.new()
     self.cellHeight = 0
     self.objWidth = 0
     self.objHeight = 0
+    self.ballsTouched = 0
 
     function self.load()
         self.cellWidth = love.graphics.getWidth() / config.grid.width
-        self.cellHeight = love.graphics.getHeight() / config.grid.height
+        self.cellHeight = (love.graphics.getHeight() - config.offset) / config.grid.height
         self.objWidth = self.cellWidth * 0.6
         self.objHeight = self.cellHeight * 0.6
         self.grid_x = love.math.random(0, config.grid.width - 1)
@@ -26,8 +27,8 @@ function Player.new()
 
     function self.draw()
         local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
-        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2
-        love.graphics.setColor(1, 0, 0)
+        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2 + config.offset
+        love.graphics.setColor(1, 218 / 255, 3 / 255)
         love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2, self.objWidth / 2,
             self.objHeight / 2)
     end
@@ -57,7 +58,7 @@ function Player.new()
                 self.grid_x = target_x
             end
         end
-        print(self.grid_x, self.grid_y)
+        print(self.grid_x, self.grid_y, self.ballsTouched)
     end
 
     return self

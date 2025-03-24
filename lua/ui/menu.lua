@@ -1,9 +1,10 @@
+local config = require('config')
 local Menu = {}
 Menu.menus = { 'Play', 'Quit' }
 Menu.selected_menu_item = 1
 Menu.font_height = 30
 Menu.window_width = 800
-Menu.window_height = 800
+Menu.window_height = 800 + config.offset
 
 function Menu.load()
     Menu.window_width, Menu.window_height = love.graphics.getDimensions()

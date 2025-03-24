@@ -57,6 +57,9 @@ function love.update(dt)
             timer = 0
         end
     end
+    if gameState == 'menu' then
+        Menu.update(dt)
+    end
 end
 
 function love.draw()

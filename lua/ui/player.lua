@@ -1,7 +1,8 @@
-local maze = require("ui.maze")
-local player = {}
+local Maze = require("ui.maze")
+local config = require("config")
+local Player = {}
 
-function player.new()
+function Player.new()
     local self = {}
     self.grid_x = 0
     self.grid_y = 0
@@ -11,15 +12,15 @@ function player.new()
     self.objHeight = 0
 
     function self.load()
-        self.cellWidth = love.graphics.getWidth() / 13
-        self.cellHeight = love.graphics.getHeight() / 13
+        self.cellWidth = love.graphics.getWidth() / config.grid.width
+        self.cellHeight = love.graphics.getHeight() / config.grid.height
         self.objWidth = self.cellWidth * 0.6
         self.objHeight = self.cellHeight * 0.6
-        self.grid_x = love.math.random(0, 12)
-        self.grid_y = love.math.random(0, 12)
-        while maze.grid[self.grid_y + 1][self.grid_x + 1] == 1 do
-            self.grid_x = love.math.random(0, 12)
-            self.grid_y = love.math.random(0, 12)
+        self.grid_x = love.math.random(0, config.grid.width - 1)
+        self.grid_y = love.math.random(0, config.grid.height - 1)
+        while Maze.grid[self.grid_y + 1][self.grid_x + 1] == 1 do
+            self.grid_x = love.math.random(0, config.grid.width - 1)
+            self.grid_y = love.math.random(0, config.grid.height - 1)
         end
     end
 
@@ -31,7 +32,35 @@ function player.new()
             self.objHeight / 2)
     end
 
+    function self.keypressed(key)
+        if key == 'escape' then
+            game_state = 'menu'
+        end
+        if key == "up" then
+            local target_y = self.grid_y - 1
+            if target_y >= 0 and Maze.grid[target_y + 1][self.grid_x + 1] == 0 then
+                self.grid_y = target_y
+            end
+        elseif key == "down" then
+            local target_y = self.grid_y + 1
+            if target_y <= config.grid.height - 1 and Maze.grid[target_y + 1][self.grid_x + 1] == 0 then
+                self.grid_y = target_y
+            end
+        elseif key == "left" then
+            local target_x = self.grid_x - 1
+            if target_x >= 0 and Maze.grid[self.grid_y + 1][target_x + 1] == 0 then
+                self.grid_x = target_x
+            end
+        elseif key == "right" then
+            local target_x = self.grid_x + 1
+            if target_x <= config.grid.width - 1 and Maze.grid[self.grid_y + 1][target_x + 1] == 0 then
+                self.grid_x = target_x
+            end
+        end
+        print(self.grid_x, self.grid_y)
+    end
+
     return self
 end
 
-return player
+return Player

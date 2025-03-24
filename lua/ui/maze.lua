@@ -1,3 +1,4 @@
+local config = require("config")
 local M = {}
 
 M.grid = {
@@ -16,8 +17,8 @@ M.grid = {
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 }
 
-local mazeWidth = 13
-local mazeHeight = 13
+local mazeWidth = config.grid.width
+local mazeHeight = config.grid.height
 
 function M.draw()
     local cellWidth = love.graphics.getWidth() / mazeWidth

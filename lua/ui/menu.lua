@@ -31,9 +31,9 @@ function Menu.draw()
 end
 
 function Menu.keypressed(key, start_game_callback)
-    -- if key == 'escape' then
-    --     love.event.quit()
-    if key == 'up' then
+    if key == 'escape' then
+        love.event.quit()
+    elseif key == 'up' then
         Menu.selected_menu_item = Menu.selected_menu_item - 1
         if Menu.selected_menu_item < 1 then
             Menu.selected_menu_item = #Menu.menus

@@ -6,5 +6,6 @@ M.grid = {
 }
 M.balls = 8
 M.offset = 100
+M.enemies = 3
 
 return M

@@ -33,9 +33,9 @@ function Player.new()
             self.objHeight / 2)
     end
 
-    function self.keypressed(key)
+    function self.keypressed(key, callback)
         if key == 'escape' then
-            game_state = 'menu'
+            callback()
         end
         if key == "up" then
             local target_y = self.grid_y - 1

@@ -5,6 +5,11 @@ local Enemy = {}
 
 function Enemy.new()
     local self = {}
+    self.img = {}
+    self.imgs = { love.graphics.newImage("assets/bazger.png"), love.graphics.newImage("assets/bazger_open_rotate.png") }
+    self.current_img = 1
+    self.img_open = {}
+    self.img.scale = 0.5
     self.grid_x = 0
     self.grid_y = 0
     self.cellWidth = 0
@@ -13,12 +18,16 @@ function Enemy.new()
     self.objHeight = 0
     self.size = 0.5
     self.visited = {}
+    self.image = love.graphics.newImage("assets/bazger.png")
+    self.img.width = self.image:getWidth() * self.img.scale
+    self.img.height = self.image:getHeight() * self.img.scale
 
     function self.load()
         self.cellWidth = love.graphics.getWidth() / config.grid.width
         self.cellHeight = (love.graphics.getHeight() - config.offset) / config.grid.height
         self.objWidth = self.cellWidth * self.size
         self.objHeight = self.cellHeight * self.size
+        self.color = { math.random(), math.random(), math.random() }
 
         repeat
             self.grid_x = love.math.random(0, config.grid.width - 1)
@@ -28,12 +37,20 @@ function Enemy.new()
     end
 
     function self.draw()
-        local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
-        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2
-        love.graphics.setColor(1, 0, 0)
-        love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2 + config.offset,
-            self.objWidth / 2,
-            self.objHeight / 2)
+        -- local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
+        -- local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2
+        -- love.graphics.setColor(1, 0, 0)
+        -- love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2 + config.offset,
+        --     self.objWidth / 2,
+        --     self.objHeight / 2)
+        --     feat: draw bazger
+        local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.img.width) / 2
+        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.img.height) / 2 + config.offset
+        love.graphics.setColor(self.color)
+        love.graphics.draw(self.imgs[self.current_img], draw_x + self.img.width / 4, draw_y + self.img.height / 4, 0,
+            self.img.scale,
+            self.img.scale,
+            self.img.width / 2, self.img.height / 2)
     end
 
     function self.move()

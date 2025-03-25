@@ -17,6 +17,8 @@ local timer = 0
 local interval = 0.5
 local initialWait = 1
 local initialTimer = 0
+local animateTimer = 0
+local animateInterval = 0.3
 
 function startGame()
     love.math.setRandomSeed(os.time())
@@ -44,6 +46,7 @@ function love.update(dt)
     if gameState == 'game' then
         timer = timer + dt
         initialTimer = initialTimer + dt
+        animateTimer = animateTimer + dt
         if ballTouch() then
             player.ballsTouched = player.ballsTouched + 1
         end
@@ -55,6 +58,16 @@ function love.update(dt)
                 enemies[i].move()
             end
             timer = 0
+        end
+        if animateTimer >= animateInterval then
+            for i = 1, Config.enemies do
+                if enemies[i].current_img == 1 then
+                    enemies[i].current_img = 2
+                else
+                    enemies[i].current_img = 1
+                end
+            end
+            animateTimer = 0
         end
     end
     if gameState == 'menu' then

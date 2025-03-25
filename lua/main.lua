@@ -39,7 +39,7 @@ function startGame()
     -- interval = 0.5
     gameState = 'enemy_selection'
     EnemySelection.load()
-    EnemySelection.draw()
+    EnemySelection.draw(Menu)
     interval = 0.5
     initialTimer = 0
 end
@@ -87,6 +87,12 @@ function love.update(dt)
         Menu.update(dt)
         -- print(love.mouse.getX())
     end
+    if gameState == 'enemy_selection' then
+        EnemySelection.update(dt, Menu)
+    end
+    if gameState == 'gameover' then
+        GameOver.update(dt, Menu)
+    end
 end
 
 function love.draw()
@@ -106,9 +112,9 @@ function love.draw()
             love.graphics.getWidth() / 2 - love.graphics.getFont():getWidth("Balls touched: " .. player.ballsTouched) / 2,
             30)
     elseif gameState == 'gameover' then
-        GameOver.draw(player, enemyName)
+        GameOver.draw(player, enemyName, Menu)
     elseif gameState == 'enemy_selection' then
-        EnemySelection.draw()
+        EnemySelection.draw(Menu)
     end
     love.graphics.draw(cursor.image, cursor.x, cursor.y)
 end

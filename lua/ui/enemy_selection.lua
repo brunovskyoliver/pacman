@@ -18,8 +18,19 @@ function EnemySelection.load()
     EnemySelection.images = { cancel = love.graphics.newImage('assets/cancel.png') }
 end
 
-function EnemySelection.draw()
+function EnemySelection.draw(Menu)
     love.graphics.setBackgroundColor(134 / 255, 45 / 255, 89 / 255)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(
+        Menu.pacman.image,
+        Menu.pacman.x + Menu.pacman.width / 2,
+        Menu.pacman.y + Menu.pacman.height / 2,
+        Menu.pacman.angle,
+        Menu.pacman.scale,
+        Menu.pacman.scale,
+        Menu.pacman.image:getWidth() / 2,
+        Menu.pacman.image:getHeight() / 2
+    )
     love.graphics.draw(EnemySelection.images.cancel, 20, 20, 0, 2, 2)
     local button_width = 200
     local button_height = 300
@@ -46,7 +57,23 @@ function EnemySelection.draw()
     end
 end
 
-function EnemySelection.update(dt)
+function EnemySelection.update(dt, Menu)
+    Menu.pacman.x = Menu.pacman.x + math.cos(Menu.pacman.angle) * Menu.pacman.speed * dt
+    Menu.pacman.y = Menu.pacman.y + math.sin(Menu.pacman.angle) * Menu.pacman.speed * dt
+    if Menu.pacman.x < 0 then
+        Menu.pacman.x = 0
+        Menu.pacman.angle = math.pi - Menu.pacman.angle
+    elseif Menu.pacman.x + Menu.pacman.width > Menu.window_width then
+        Menu.pacman.x = Menu.window_width - Menu.pacman.width
+        Menu.pacman.angle = math.pi - Menu.pacman.angle
+    elseif Menu.pacman.y < 0 then
+        Menu.pacman.y = 0
+        Menu.pacman.angle = -Menu.pacman.angle
+    elseif Menu.pacman.y + Menu.pacman.height > Menu.window_height then
+        Menu.pacman.y = Menu.window_height - Menu.pacman.height
+        Menu.pacman.angle = -Menu.pacman.angle
+    end
+    Menu.pacman.angle = Menu.pacman.angle % (2 * math.pi)
 end
 
 function EnemySelection.keypressed(key, go_back_callback)

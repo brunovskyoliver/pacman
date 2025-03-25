@@ -13,8 +13,19 @@ function GameOver.load()
     GameOver.font_height = font:getHeight()
 end
 
-function GameOver.draw(player, enemyName)
+function GameOver.draw(player, enemyName, Menu)
     love.graphics.setBackgroundColor(134 / 255, 45 / 255, 89 / 255)
+    love.graphics.draw(
+        Menu.pacman.image,
+        Menu.pacman.x + Menu.pacman.width / 2,
+        Menu.pacman.y + Menu.pacman.height / 2,
+        Menu.pacman.angle,
+        Menu.pacman.scale,
+        Menu.pacman.scale,
+        Menu.pacman.image:getWidth() / 2,
+        Menu.pacman.image:getHeight() / 2
+    )
+
     local horizontal_center = GameOver.window_width / 2
     local vertical_center = GameOver.window_height / 2
     local start_y = vertical_center - (GameOver.font_height * (#GameOver.menus / 2))
@@ -44,6 +55,25 @@ function GameOver.draw(player, enemyName)
             start_y + GameOver.font_height * (i - 1) + GameOver.font_padding * (i - 1), GameOver.window_width,
             'center')
     end
+end
+
+function GameOver.update(dt, Menu)
+    Menu.pacman.x = Menu.pacman.x + math.cos(Menu.pacman.angle) * Menu.pacman.speed * dt
+    Menu.pacman.y = Menu.pacman.y + math.sin(Menu.pacman.angle) * Menu.pacman.speed * dt
+    if Menu.pacman.x < 0 then
+        Menu.pacman.x = 0
+        Menu.pacman.angle = math.pi - Menu.pacman.angle
+    elseif Menu.pacman.x + Menu.pacman.width > Menu.window_width then
+        Menu.pacman.x = Menu.window_width - Menu.pacman.width
+        Menu.pacman.angle = math.pi - Menu.pacman.angle
+    elseif Menu.pacman.y < 0 then
+        Menu.pacman.y = 0
+        Menu.pacman.angle = -Menu.pacman.angle
+    elseif Menu.pacman.y + Menu.pacman.height > Menu.window_height then
+        Menu.pacman.y = Menu.window_height - Menu.pacman.height
+        Menu.pacman.angle = -Menu.pacman.angle
+    end
+    Menu.pacman.angle = Menu.pacman.angle % (2 * math.pi)
 end
 
 function GameOver.mousepressed(x, y, start_game_callback, go_to_main_menu_callback)

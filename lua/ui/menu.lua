@@ -31,6 +31,7 @@ end
 
 function Menu.draw()
     love.graphics.setBackgroundColor(134 / 255, 45 / 255, 89 / 255)
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(Menu.settings.image, Menu.window_width - 20 - Menu.settings.image:getWidth(),
         Menu.window_height - 20 - Menu.settings.image:getHeight(), 0, 2, 2)
     local horizontal_center = Menu.window_width / 2

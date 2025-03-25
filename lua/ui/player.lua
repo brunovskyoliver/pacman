@@ -4,6 +4,8 @@ local Player = {}
 
 function Player.new()
     local self = {}
+    self.img = {}
+    self.img.scale = 0.5
     self.grid_x = 0
     self.grid_y = 0
     self.cellWidth = 0
@@ -11,6 +13,10 @@ function Player.new()
     self.objWidth = 0
     self.objHeight = 0
     self.ballsTouched = 0
+    self.image = love.graphics.newImage("assets/metodej.png")
+    self.img.width = self.image:getWidth() * self.img.scale
+    self.img.height = self.image:getHeight() * self.img.scale
+
 
     function self.load()
         self.cellWidth = love.graphics.getWidth() / config.grid.width
@@ -26,11 +32,18 @@ function Player.new()
     end
 
     function self.draw()
-        local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
-        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2 + config.offset
-        love.graphics.setColor(1, 218 / 255, 3 / 255)
-        love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2, self.objWidth / 2,
-            self.objHeight / 2)
+        -- local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
+        -- local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2 + config.offset
+        -- love.graphics.setColor(1, 218 / 255, 3 / 255)
+        -- love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2, self.objWidth / 2,
+        --     self.objHeight / 2)
+        local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.img.width) / 2
+        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.img.height) / 2 + config.offset
+        -- love.graphics.setColor(self.color)
+        love.graphics.draw(self.image, draw_x + self.img.width / 4, draw_y + self.img.height / 4, 0,
+            self.img.scale,
+            self.img.scale,
+            self.img.width / 2, self.img.height / 2)
     end
 
     function self.keypressed(key, callback)

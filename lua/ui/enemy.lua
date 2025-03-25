@@ -3,10 +3,17 @@ local config = require("config")
 local Player = require("ui.player")
 local Enemy = {}
 
-function Enemy.new()
+function Enemy.new(selectedEnemy)
     local self = {}
     self.img = {}
-    self.imgs = { love.graphics.newImage("assets/bazger.png"), love.graphics.newImage("assets/bazger_open_rotate.png") }
+    self.imgs_bazger = { love.graphics.newImage("assets/bazger.png"), love.graphics.newImage(
+        "assets/bazger_open_rotate.png") }
+    self.imgs_lukasko = { love.graphics.newImage("assets/lukasko.png"), love.graphics.newImage("assets/lukasko_open.png") }
+    if selectedEnemy == "Bazman" then
+        self.imgs = self.imgs_bazger
+    elseif selectedEnemy == "Lukasko" then
+        self.imgs = self.imgs_lukasko
+    end
     self.current_img = 1
     self.img_open = {}
     self.img.scale = 0.5

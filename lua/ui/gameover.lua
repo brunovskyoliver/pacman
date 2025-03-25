@@ -3,6 +3,7 @@ local GameOver = {}
 GameOver.menus = { 'Play again?!', 'Quit' }
 GameOver.selected_menu_item = 1
 GameOver.font_height = 30
+GameOver.font_padding = 10
 GameOver.window_width = 800
 GameOver.window_height = 800 + config.offset
 
@@ -27,7 +28,8 @@ function GameOver.draw()
         else
             love.graphics.setColor(1, 1, 1, 1)
         end
-        love.graphics.printf(GameOver.menus[i], 0, start_y + GameOver.font_height * (i - 1), GameOver.window_width,
+        love.graphics.printf(GameOver.menus[i], 0,
+            start_y + GameOver.font_height * (i - 1) + GameOver.font_padding * (i - 1), GameOver.window_width,
             'center')
     end
 end

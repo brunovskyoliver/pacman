@@ -3,8 +3,9 @@ local Menu = {}
 Menu.menus = { 'Play', 'Quit' }
 Menu.selected_menu_item = 1
 Menu.font_height = 30
-Menu.window_width = 800
-Menu.window_height = 800 + config.offset
+Menu.font_padding = 10
+Menu.window_width = config.window.width
+Menu.window_height = config.window.height
 Menu.pacman = {}
 
 function Menu.load()
@@ -37,15 +38,17 @@ function Menu.draw()
         Menu.pacman.image:getHeight() / 2
     )
     love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setNewFont(50)
     love.graphics.printf("Bazman", 0, 150, Menu.window_width, 'center')
-
+    love.graphics.setNewFont(30)
     for i = 1, #Menu.menus do
         if i == Menu.selected_menu_item then
             love.graphics.setColor(1, 1, 0, 1)
         else
             love.graphics.setColor(1, 1, 1, 1)
         end
-        love.graphics.printf(Menu.menus[i], 0, start_y + Menu.font_height * (i - 1), Menu.window_width, 'center')
+        love.graphics.printf(Menu.menus[i], 0, start_y + Menu.font_height * (i - 1) + Menu.font_padding * (i - 1),
+            Menu.window_width, 'center')
     end
 end
 

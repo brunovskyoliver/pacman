@@ -34,7 +34,7 @@ function startGame()
 end
 
 function love.load()
-    love.window.setMode(800, 900)
+    love.window.setMode(Config.window.width, Config.window.height)
     love.window.setTitle("Bazman")
     Menu.load()
     GameOver.load()

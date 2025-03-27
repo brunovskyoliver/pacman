@@ -1,6 +1,6 @@
 local config = require('config')
 local Menu = {}
-Menu.menus = { 'Play', 'Quit' }
+Menu.menus = { 'Play', 'Leaderboard', 'Quit' }
 Menu.selected_menu_item = 1
 Menu.font_height = 30
 Menu.font_padding = 15
@@ -91,7 +91,7 @@ function Menu.update(dt)
     Menu.pacman.angle = Menu.pacman.angle % (2 * math.pi)
 end
 
-function Menu.keypressed(key, start_game_callback)
+function Menu.keypressed(key, start_game_callback, show_leaderboard_callback)
     if key == 'escape' then
         love.event.quit()
     elseif key == 'up' then
@@ -107,13 +107,15 @@ function Menu.keypressed(key, start_game_callback)
     elseif key == 'return' or key == 'kpenter' then
         if Menu.menus[Menu.selected_menu_item] == 'Play' then
             start_game_callback()
+        elseif Menu.menus[Menu.selected_menu_item] == 'Leaderboard' then
+            show_leaderboard_callback()
         elseif Menu.menus[Menu.selected_menu_item] == 'Quit' then
             love.event.quit()
         end
     end
 end
 
-function Menu.mousepressed(x, y, start_game_callback)
+function Menu.mousepressed(x, y, start_game_callback, show_leaderboard_callback)
     local horizontal_center = Menu.window_width / 2
     local vertical_center = Menu.window_height / 2
     local start_y = vertical_center - (Menu.font_height * (#Menu.menus / 2))
@@ -123,6 +125,8 @@ function Menu.mousepressed(x, y, start_game_callback)
             y < start_y + Menu.font_height * (i - 1) + Menu.font_padding * (i - 1) + Menu.font_height then
             if Menu.menus[i] == 'Play' then
                 start_game_callback()
+            elseif Menu.menus[i] == 'Leaderboard' then
+                show_leaderboard_callback()
             elseif Menu.menus[i] == 'Quit' then
                 love.event.quit()
             end

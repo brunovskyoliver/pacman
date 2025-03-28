@@ -76,4 +76,3 @@ function Leaderboard.keypressed(key, back_callback)
 end
 
 return Leaderboard
-

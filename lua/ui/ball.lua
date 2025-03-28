@@ -7,18 +7,9 @@ function Ball.new()
     local self = {}
     self.grid_x = 0
     self.grid_y = 0
-    self.cellWidth = 0
-    self.cellHeight = 0
-    self.objWidth = 0
-    self.objHeight = 0
     self.size = 0.5
 
     function self.load(balls, ball_count)
-        self.cellWidth = love.graphics.getWidth() / config.grid.width
-        self.cellHeight = (love.graphics.getHeight() - config.offset) / config.grid.height
-        self.objWidth = self.cellWidth * self.size
-        self.objHeight = self.cellHeight * self.size
-
         local function ballsCheck(x, y)
             for i = 1, ball_count do
                 if balls[i].grid_x == x and balls[i].grid_y == y then
@@ -54,12 +45,17 @@ function Ball.new()
     end
 
     function self.draw()
-        local draw_x = self.grid_x * self.cellWidth + (self.cellWidth - self.objWidth) / 2
-        local draw_y = self.grid_y * self.cellHeight + (self.cellHeight - self.objHeight) / 2
+        local cellSize = Maze.getCellSize()
+        local offsetX, offsetY = Maze.getMazeOffset()
+        local objSize = cellSize * self.size
+        local draw_x = offsetX + self.grid_x * cellSize + (cellSize - objSize) / 2
+        local draw_y = offsetY + self.grid_y * cellSize + (cellSize - objSize) / 2
         love.graphics.setColor(168 / 255, 164 / 255, 149 / 255)
-        love.graphics.ellipse("fill", draw_x + self.objWidth / 2, draw_y + self.objHeight / 2 + config.offset,
-            self.objWidth / 2,
-            self.objHeight / 2)
+        love.graphics.ellipse("fill",
+            draw_x + objSize / 2,
+            draw_y + objSize / 2,
+            objSize / 2,
+            objSize / 2)
     end
 
     return self

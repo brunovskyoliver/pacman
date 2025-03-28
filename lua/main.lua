@@ -286,3 +286,15 @@ function love.mousepressed(x, y, button, istouch, presses)
         end)
     end
 end
+
+function love.resize(w, h)
+    if Menu then Menu.window_width, Menu.window_height = w, h end
+    if Settings then Settings.window_width, Settings.window_height = w, h end
+    if GameOver then GameOver.window_width, GameOver.window_height = w, h end
+    if EnemySelection then EnemySelection.window_width, EnemySelection.window_height = w, h end
+    if Leaderboard then Leaderboard.window_width, Leaderboard.window_height = w, h end
+    if NameInput then NameInput.window_width, NameInput.window_height = w, h end
+    Config.window.width = w
+    Config.window.height = h
+    print("resize", w, h)
+end

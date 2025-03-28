@@ -1,7 +1,6 @@
 local config = require('config')
 local Settings = {}
 Settings.menus = { 'Toggle Music', 'Toggle Fullscreen' }
-Settings.selected_menu_item = 1
 Settings.font_height = 30
 Settings.font_padding = 15
 Settings.window_width = config.window.width
@@ -44,21 +43,36 @@ function Settings.draw(Menu)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setNewFont(50)
     love.graphics.printf("Settings", 0, 150, Settings.window_width, 'center')
+
     love.graphics.setNewFont(30)
+    local buttonFont = love.graphics.getFont()
+    local maxTextWidth = 0
+
+    for i = 1, #Settings.menus do
+        local textWidth = buttonFont:getWidth(Settings.menus[i])
+        if textWidth > maxTextWidth then
+            maxTextWidth = textWidth
+        end
+    end
+
+    local buttonPadding = 40
+    local buttonWidth = maxTextWidth + buttonPadding * 2
+
     for i = 1, #Settings.menus do
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.rectangle("fill", horizontal_center - 100 - 5,
+        love.graphics.rectangle("fill",
+            horizontal_center - buttonWidth / 2 - 5,
             start_y + Settings.font_height * (i - 1) + Settings.font_padding * (i - 1) - 5,
-            210, Settings.font_height + 10)
+            buttonWidth + 10, Settings.font_height + 10)
+
         love.graphics.setColor(153 / 255, 102 / 255, 51 / 255, 1)
-        love.graphics.rectangle("fill", horizontal_center - 100,
+        love.graphics.rectangle("fill",
+            horizontal_center - buttonWidth / 2,
             start_y + Settings.font_height * (i - 1) + Settings.font_padding * (i - 1),
-            200, Settings.font_height)
-        if i == Settings.selected_menu_item then
-            love.graphics.setColor(153 / 255, 153 / 255, 51 / 255, 1)
-        else
-            love.graphics.setColor(1, 1, 1, 1)
-        end
+            buttonWidth, Settings.font_height)
+
+        love.graphics.setColor(1, 1, 1, 1)
+
         love.graphics.printf(Settings.menus[i], 0,
             start_y + Settings.font_height * (i - 1) + Settings.font_padding * (i - 1),
             Settings.window_width, 'center')
@@ -94,19 +108,53 @@ function Settings.mousepressed(x, y, go_back_callback)
     local horizontal_center = Settings.window_width / 2
     local vertical_center = Settings.window_height / 2
     local start_y = vertical_center - (Settings.font_height * (#Settings.menus / 2))
-    if x > 20 and x < 20 + Settings.images.cancel:getWidth() * 2 and y > 20 and y < 20 + Settings.images.cancel:getHeight() * 2 then
+
+    if x > 20 and x < 20 + Settings.images.cancel:getWidth() * 2 and
+        y > 20 and y < 20 + Settings.images.cancel:getHeight() * 2 then
         go_back_callback()
+        return
     end
 
+    local buttonFont = love.graphics.newFont(30)
+    local maxTextWidth = 0
+
     for i = 1, #Settings.menus do
-        if x > horizontal_center - 100 and x < horizontal_center + 100 and
+        local textWidth = buttonFont:getWidth(Settings.menus[i])
+        if textWidth > maxTextWidth then
+            maxTextWidth = textWidth
+        end
+    end
+
+    local buttonPadding = 40
+    local buttonWidth = maxTextWidth + buttonPadding * 2
+
+    for i = 1, #Settings.menus do
+        if x > horizontal_center - buttonWidth / 2 and
+            x < horizontal_center + buttonWidth / 2 and
             y > start_y + Settings.font_height * (i - 1) + Settings.font_padding * (i - 1) and
             y < start_y + Settings.font_height * (i - 1) + Settings.font_padding * (i - 1) + Settings.font_height then
             if Settings.menus[i] == 'Toggle Music' then
                 love.audio.setVolume(love.audio.getVolume() == 0 and 1 or 0)
             elseif Settings.menus[i] == 'Toggle Fullscreen' then
-                love.window.setFullscreen(not love.window.getFullscreen())
+                local fullscreen = not love.window.getFullscreen()
+
+                if fullscreen then
+                    Settings.previousWidth = love.graphics.getWidth()
+                    Settings.previousHeight = love.graphics.getHeight()
+
+                    love.window.setFullscreen(true, "desktop")
+                else
+                    love.window.setFullscreen(false)
+                    if Settings.previousWidth and Settings.previousHeight then
+                        love.window.setMode(Settings.previousWidth, Settings.previousHeight)
+                    end
+                end
+
+                local w, h = love.graphics.getDimensions()
+                love.resize(w, h)
             end
+
+            return
         end
     end
 end

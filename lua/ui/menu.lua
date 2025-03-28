@@ -22,7 +22,7 @@ function Menu.load()
     Menu.pacman.x = love.math.random() * Menu.window_width
     Menu.pacman.y = love.math.random() * Menu.window_height
     Menu.pacman.angle = love.math.random() * 2 * math.pi
-    Menu.pacman.speed = 100
+    Menu.pacman.speed = 200
     Menu.logo.holder.image = love.graphics.newImage('assets/logo_holder.png')
     Menu.logo.holder.width = Menu.logo.holder.image:getWidth()
     Menu.logo.holder.height = Menu.logo.holder.image:getHeight()
@@ -115,10 +115,17 @@ function Menu.keypressed(key, start_game_callback, show_leaderboard_callback)
     end
 end
 
-function Menu.mousepressed(x, y, start_game_callback, show_leaderboard_callback)
+function Menu.mousepressed(x, y, start_game_callback, show_leaderboard_callback, go_menu_settings)
     local horizontal_center = Menu.window_width / 2
     local vertical_center = Menu.window_height / 2
     local start_y = vertical_center - (Menu.font_height * (#Menu.menus / 2))
+    print(x, y)
+    if x > Menu.window_width - 20 - Menu.settings.image:getWidth() and
+        x < Menu.window_width - 7 and
+        y > Menu.window_height - 20 - Menu.settings.image:getHeight() and
+        y < Menu.window_height - 7 then
+        go_menu_settings()
+    end
     for i = 1, #Menu.menus do
         if x > horizontal_center - 100 and x < horizontal_center + 100 and
             y > start_y + Menu.font_height * (i - 1) + Menu.font_padding * (i - 1) and

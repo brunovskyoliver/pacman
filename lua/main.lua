@@ -9,6 +9,7 @@ local GameOver = require("ui.gameover")
 local EnemySelection = require("ui.enemy_selection")
 local Leaderboard = require("ui.leaderboard")
 local NameInput = require("ui.name_input")
+local Settings = require("ui.settings")
 
 local clientpeer = nil
 local enetclient = nil
@@ -41,14 +42,23 @@ function startGame()
     NameInput.load()
 end
 
-function love.load()
+function ClientConnect(args)
     enetclient = enet.host_create()
-    clientpeer = enetclient:connect("142.93.163.11:6969")
+    if args[2] == "--dev" then
+        clientpeer = enetclient:connect("localhost:6969")
+    else
+        clientpeer = enetclient:connect("142.93.163.11:6969")
+    end
+end
+
+function love.load()
+    ClientConnect(arg)
     love.window.setMode(Config.window.width, Config.window.height)
     love.window.setTitle("Bazman")
     love.mouse.setVisible(false)
     cursor.image = love.graphics.newImage("assets/cursor.png")
     Menu.load()
+    Settings.load()
     GameOver.load()
     Leaderboard.load()
     NameInput.load()
@@ -58,7 +68,7 @@ function love.update(dt)
     local event = enetclient:service()
     if event then
         if event.type == "connect" then
-            print("con")
+            print("con", event.peer)
             if gameState == 'menu' and not initialHelloSent then
                 ClientSend("hello")
                 initialHelloSent = true
@@ -122,11 +132,16 @@ function love.update(dt)
     if gameState == 'name_input' then
         NameInput.update(dt, Menu)
     end
+    if gameState == 'settings' then
+        Settings.update(dt, Menu)
+    end
 end
 
 function love.draw()
     if gameState == 'menu' then
         Menu.draw()
+    elseif gameState == 'settings' then
+        Settings.draw(Menu)
     elseif gameState == 'game' then
         Maze.draw()
         player.draw()
@@ -211,6 +226,8 @@ function love.keypressed(key, scancode, isrepeat)
         elseif key == 'escape' then
             gameState = 'menu'
         end
+    elseif gameState == 'settings' then
+        Settings.keypressed(key, function() gameState = 'menu' end)
     end
 end
 
@@ -220,6 +237,9 @@ function love.mousepressed(x, y, button, istouch, presses)
             gameState = 'leaderboard'
             ClientSend("get_highscore")
             Leaderboard.load()
+        end, function()
+            gameState = 'settings'
+            print("settings")
         end)
     elseif gameState == 'gameover' then
         GameOver.mousepressed(x, y, function()
@@ -260,5 +280,9 @@ function love.mousepressed(x, y, button, istouch, presses)
                 gameState = 'menu'
             end
         )
+    elseif gameState == 'settings' then
+        Settings.mousepressed(x, y, function()
+            gameState = 'menu'
+        end)
     end
 end

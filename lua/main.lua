@@ -43,7 +43,7 @@ end
 
 function love.load()
     enetclient = enet.host_create()
-    clientpeer = enetclient:connect("127.0.0.1:6969")
+    clientpeer = enetclient:connect("142.93.163.11:6969")
     love.window.setMode(Config.window.width, Config.window.height)
     love.window.setTitle("Bazman")
     love.mouse.setVisible(false)

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/codecat/go-enet"
 	"os"
 	"strings"
+
+	"github.com/codecat/go-enet"
 )
 
 func getHighscore() (string, string, string) {
@@ -83,7 +84,7 @@ func main() {
 						if err != nil {
 							continue
 						} else {
-							fmt.Printf("gg %s balls hrac %s s IP: %s)\n", score, playerName, playerIP)
+							fmt.Printf("gg %s balls hrac %s s IP: %s\n", score, playerName, playerIP)
 						}
 					}
 				}
